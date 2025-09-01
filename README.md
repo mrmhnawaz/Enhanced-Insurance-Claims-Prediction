@@ -46,5 +46,5 @@ We apply data preprocessing, exploratory data analysis (EDA), and machine learni
 ## 🚀 How to Run
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-username/insurance-claims-prediction.git
+   git clone https://github.com/mrmhnawaz/insurance-claims-prediction.git
    cd insurance-claims-prediction
