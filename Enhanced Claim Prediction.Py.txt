@@ -1,0 +1,77 @@
+# =====================================
+# 🏥 Enhanced Insurance Claims Prediction
+# =====================================
+
+# 1. Import Libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# 2. Load Dataset
+# Replace with your dataset path
+data = pd.read_csv("insurance_claims.csv")
+
+print("✅ Dataset Loaded")
+print("Shape of Data:", data.shape)
+print(data.head())
+
+# 3. Data Preprocessing
+# Drop missing values (basic cleaning)
+data = data.dropna()
+
+# Encode categorical variables
+data = pd.get_dummies(data, drop_first=True)
+
+print("✅ Data Preprocessing Done")
+print("Shape after preprocessing:", data.shape)
+
+# 4. Exploratory Data Analysis (EDA)
+plt.figure(figsize=(6,4))
+sns.histplot(data['claim_amount'], bins=30, kde=True)
+plt.title("Claim Amount Distribution")
+plt.savefig("claim_amount_distribution.png")
+plt.close()
+
+plt.figure(figsize=(6,4))
+sns.countplot(x='claim_status', data=data)
+plt.title("Claim Status Count")
+plt.savefig("claim_status_count.png")
+plt.close()
+
+print("✅ EDA Plots Saved")
+
+# 5. Splitting Data
+X = data.drop("claim_status", axis=1)
+y = data["claim_status"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+print("✅ Train-Test Split Done")
+print("Training Size:", X_train.shape)
+print("Testing Size:", X_test.shape)
+
+# 6. Model Training
+model = LogisticRegression(max_iter=500)
+model.fit(X_train, y_train)
+
+print("✅ Model Training Completed")
+
+# 7. Model Evaluation
+y_pred = model.predict(X_test)
+
+print("\n📊 Model Evaluation Results")
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+# Save predictions
+results = pd.DataFrame({"Actual": y_test, "Predicted": y_pred})
+results.to_csv("predictions.csv", index=False)
+
+print("\n✅ Predictions Saved to predictions.csv")
